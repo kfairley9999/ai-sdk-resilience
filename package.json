@@ -31,7 +31,8 @@
     "test:coverage": "vitest run --coverage",
     "bench": "tsx bench/run.ts",
     "playground": "npm run build && wrangler dev --config playground/wrangler.jsonc --port 4391 --ip 127.0.0.1",
-    "playground:dry-run": "wrangler deploy --dry-run --config playground/wrangler.jsonc --outdir .wrangler/dry-run"
+    "playground:dry-run": "wrangler deploy --dry-run --config playground/wrangler.jsonc --outdir .wrangler/dry-run",
+    "prepare": "tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
     "@ai-sdk/provider": "^4.0.0",

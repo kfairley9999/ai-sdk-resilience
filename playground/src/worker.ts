@@ -25,12 +25,63 @@ interface RunBody {
 
 const encoder = new TextEncoder();
 
+/** Batches are a few hundred bytes. Anything larger is not from the page. */
+const MAX_BODY_BYTES = 16 * 1024;
+
+const ROUTES: Record<string, string> = { '/': 'GET, HEAD', '/api/run': 'POST' };
+
+const BASE_SECURITY_HEADERS: Record<string, string> = {
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+  'referrer-policy': 'no-referrer',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+};
+
+let pagePolicy: Promise<string> | undefined;
+
+/** CSP for the page. The inline script and style are allowed by hash, nothing else runs. */
+export function contentSecurityPolicy(): Promise<string> {
+  pagePolicy ??= (async () => {
+    const script = await inlineHash(page, 'script');
+    const style = await inlineHash(page, 'style');
+    return [
+      "default-src 'none'",
+      `script-src ${script}`,
+      `style-src ${style}`,
+      "img-src 'self' data:",
+      "connect-src 'self'",
+      "base-uri 'none'",
+      "form-action 'none'",
+      "frame-ancestors 'none'",
+    ].join('; ');
+  })();
+  return pagePolicy;
+}
+
+async function inlineHash(html: string, tag: 'script' | 'style'): Promise<string> {
+  const match = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`).exec(html);
+  const body = match?.[1] ?? '';
+  const digest = await crypto.subtle.digest('SHA-256', encoder.encode(body));
+  let binary = '';
+  for (const byte of new Uint8Array(digest)) binary += String.fromCharCode(byte);
+  return `'sha256-${btoa(binary)}'`;
+}
+
+function apiError(message: string, status: number, extra: Record<string, string> = {}): Response {
+  return Response.json(
+    { error: message },
+    { status, headers: { ...BASE_SECURITY_HEADERS, 'cache-control': 'no-store', ...extra } },
+  );
+}
+
 export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
-    if (request.method === 'GET' && url.pathname === '/') {
-      return new Response(page, {
+    if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/') {
+      return new Response(request.method === 'HEAD' ? null : page, {
         headers: {
+          ...BASE_SECURITY_HEADERS,
+          'content-security-policy': await contentSecurityPolicy(),
           'content-type': 'text/html; charset=utf-8',
           'cache-control': 'no-store',
         },
@@ -39,17 +90,31 @@ export default {
     if (request.method === 'POST' && url.pathname === '/api/run') {
       return runBatch(request);
     }
-    return Response.json({ error: 'Not found' }, { status: 404 });
+    const allowed = ROUTES[url.pathname];
+    if (allowed) return apiError(`Use ${allowed}.`, 405, { allow: allowed });
+    return apiError('Not found', 404);
   },
 };
 
 async function runBatch(request: Request): Promise<Response> {
+  const declared = Number(request.headers.get('content-length') ?? '0');
+  if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
+    return apiError('Request body is larger than 16KB.', 413);
+  }
+  const raw = await request.text();
+  if (raw.length > MAX_BODY_BYTES) return apiError('Request body is larger than 16KB.', 413);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    return apiError('Send a JSON object: {"batchSize": 8, "hedge": true, "providers": [...]}.', 400);
+  }
   let body: RunBody;
   try {
-    body = validate(await request.json());
+    body = validate(parsed);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Invalid request';
-    return Response.json({ error: message }, { status: 400 });
+    return apiError(message, 400);
   }
 
   const stream = new ReadableStream({
@@ -71,6 +136,7 @@ async function runBatch(request: Request): Promise<Response> {
 
   return new Response(stream, {
     headers: {
+      ...BASE_SECURITY_HEADERS,
       'content-type': 'application/x-ndjson; charset=utf-8',
       'cache-control': 'no-store',
     },
@@ -141,7 +207,7 @@ async function execute(body: RunBody, send: (value: unknown) => void): Promise<v
 }
 
 function validate(input: unknown): RunBody {
-  if (!input || typeof input !== 'object') throw new Error('Expected a JSON object');
+  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Expected a JSON object');
   const record = input as Record<string, unknown>;
   if ('apiKey' in record || 'api_key' in record || 'authorization' in record) {
     throw new Error('This playground does not accept API keys');

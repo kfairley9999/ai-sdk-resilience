@@ -18,8 +18,10 @@ Outages are not hypothetical. [Nobody is saying why OpenAI and Anthropic had out
 
 ## Quickstart
 
+This package is not on npm yet. Install it from GitHub; the `prepare` script builds `dist/` during the install:
+
 ```bash
-npm install ai-sdk-resilience ai @ai-sdk/provider
+npm install github:kfairy9999/ai-sdk-resilience ai @ai-sdk/provider
 ```
 
 Peer dependencies are `ai@^7` and `@ai-sdk/provider@^4`. Set the SDK's own `maxRetries: 0`. Otherwise the SDK wraps this middleware in a second retry loop.

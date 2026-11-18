@@ -4,6 +4,7 @@ export const page = `<!doctype html>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chaos playground · ai-sdk-resilience</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23101512'/%3E%3Cpath d='M3 9h3l2-5 2 8 2-3h1' stroke='%2350d890' stroke-width='1.5' fill='none'/%3E%3C/svg%3E" />
   <style>
     :root {
       color-scheme: dark;
@@ -110,6 +111,7 @@ export const page = `<!doctype html>
     .chip.warn { background: #3a3016; color: var(--warn); }
     .chip.info { background: #173044; color: var(--info); }
     footer { width: min(1120px, calc(100% - 32px)); margin: 0 auto 28px; color: var(--muted); font-size: 13px; }
+    footer a { color: var(--ink, inherit); text-decoration: underline; }
     @media (max-width: 800px) {
       header { flex-direction: column; align-items: flex-start; }
       .grid, .run, .stats { grid-template-columns: 1fr; }
@@ -147,7 +149,7 @@ export const page = `<!doctype html>
       <div class="empty" id="empty">Run a batch to see the trace. Sliders change the next batch, not the one already in flight.</div>
     </section>
   </main>
-  <footer>The worker calls <code>createResilientModel</code> from this repo. Every provider below is an in-process fake.</footer>
+  <footer>The worker calls <code>createResilientModel</code> from <a href="https://github.com/kfairy9999/ai-sdk-resilience">github.com/kfairy9999/ai-sdk-resilience</a>. Every provider below is an in-process fake.</footer>
   <script>
     const providers = [
       { provider: 'openai', modelId: 'gpt-5.1', failure: 0.62, latency: 90 },
