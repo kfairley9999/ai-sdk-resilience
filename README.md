@@ -1,5 +1,9 @@
 # ai-sdk-resilience
 
+[![ci](https://github.com/kfairy9999/ai-sdk-resilience/actions/workflows/ci.yml/badge.svg)](https://github.com/kfairy9999/ai-sdk-resilience/actions/workflows/ci.yml)
+
+**Live playground:** https://ai-sdk-resilience.kfairley9999.workers.dev
+
 Retry, fall back, hedge, and trip a circuit breaker around any Vercel AI SDK model. One wrapped `LanguageModel` works with `generateText`, `streamText`, `generateObject`, and `streamObject`.
 
 Provider outages are a normal Tuesday. The SDK still leaves failover to you. This middleware is that layer: per model, with backoff that respects `Retry-After`, and with stream and usage behavior written down instead of hoped for.
@@ -148,16 +152,7 @@ Then open http://127.0.0.1:4391.
 
 ### Live demo
 
-Not deployed. This repository does not publish the Worker and does not publish the package to npm.
-
-When you want a public URL:
-
-```bash
-npx wrangler login
-npx wrangler deploy --config playground/wrangler.jsonc
-```
-
-Replace this paragraph with that URL. Until then, run it locally.
+**https://ai-sdk-resilience.kfairley9999.workers.dev** (Cloudflare Workers free tier). Mock providers only. The playground does not accept API keys, and nothing in the Worker uses a paid binding or a secret. CI runs `wrangler deploy --dry-run` and does not deploy. The package is not published to npm.
 
 ## Limitations
 
@@ -188,7 +183,7 @@ npm run bench
 npm run playground
 ```
 
-Node 20 and 22 run lint, typecheck, tests with coverage, the build, and `wrangler deploy --dry-run` in CI. AI SDK 7 declares `engines.node >= 22`. The library itself is ES2022.
+Node 20 and 22 run lint, typecheck, tests with coverage, the build, and the playground typecheck in CI. `wrangler deploy --dry-run` runs on Node 22 only; current Wrangler requires Node 22.12 or newer. AI SDK 7 declares `engines.node >= 22`. The library itself is ES2022 and is tested on Node 20 and 22.
 
 ## How it was built
 
