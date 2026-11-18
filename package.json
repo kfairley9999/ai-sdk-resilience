@@ -1,0 +1,56 @@
+{
+  "name": "ai-sdk-resilience",
+  "version": "0.1.0",
+  "description": "Retry, fallback, circuit breaker, and hedge middleware for the Vercel AI SDK.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kevin Fairley",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "typecheck:playground": "tsc -p playground/tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "bench": "tsx bench/run.ts",
+    "playground": "npm run build && wrangler dev --config playground/wrangler.jsonc --port 4391 --ip 127.0.0.1",
+    "playground:dry-run": "wrangler deploy --dry-run --config playground/wrangler.jsonc --outdir .wrangler/dry-run"
+  },
+  "peerDependencies": {
+    "@ai-sdk/provider": "^4.0.0",
+    "ai": "^7.0.0"
+  },
+  "devDependencies": {
+    "@ai-sdk/provider": "^4.0.39",
+    "@types/node": "^22.19.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "ai": "^7.0.176",
+    "ai-fallback": "^3.0.0",
+    "cockatiel": "^3.2.1",
+    "eslint": "^9.39.1",
+    "playwright": "^1.49.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.50.0",
+    "zod": "^4.1.12"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "measuredAt": "2026-11-18T15:05:43.662Z",
+  "elapsedMs": 4539,
+  "node": "v22.23.4",
+  "platform": "linux",
+  "requests": 60,
+  "seed": 20261118,
+  "notes": [
+    "Mock LanguageModelV4 providers. No network calls.",
+    "generateText maxRetries is 0 so the SDK retry loop is not stacked on top.",
+    "ai-fallback modelResetInterval is 1ms so each request starts on the primary. Its default is to stick to the fallback for 3 minutes.",
+    "cockatiel retries and breaks the primary only. It has no model fallback and no view of AI SDK streams.",
+    "Requests 24-31 are a forced primary 500 outage.",
+    "p50/p95/p99 are over successful requests. p95AllMs includes failures.",
+    "Delays use real timers. Re-running moves the numbers by a few milliseconds."
+  ],
+  "results": {
+    "plain": {
+      "requests": 60,
+      "successes": 31,
+      "successRate": 0.5,
+      "p50Ms": 10.4,
+      "p95Ms": 49,
+      "p99Ms": 49.8,
+      "meanSuccessMs": 19,
+      "p95AllMs": 48.7
+    },
+    "ai-fallback": {
+      "requests": 60,
+      "successes": 60,
+      "successRate": 1,
+      "p50Ms": 22.2,
+      "p95Ms": 59.6,
+      "p99Ms": 61.7,
+      "meanSuccessMs": 26.6,
+      "p95AllMs": 59.6
+    },
+    "cockatiel": {
+      "requests": 60,
+      "successes": 24,
+      "successRate": 0.4,
+      "p50Ms": 18.8,
+      "p95Ms": 48.5,
+      "p99Ms": 55.9,
+      "meanSuccessMs": 24.7,
+      "p95AllMs": 48.5
+    },
+    "ai-sdk-resilience": {
+      "requests": 60,
+      "successes": 60,
+      "successRate": 1,
+      "p50Ms": 17.7,
+      "p95Ms": 37.7,
+      "p99Ms": 41.4,
+      "meanSuccessMs": 20.5,
+      "p95AllMs": 37.7
+    }
+  }
+}
