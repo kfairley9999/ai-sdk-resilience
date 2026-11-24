@@ -149,7 +149,7 @@ export const page = `<!doctype html>
       <div class="empty" id="empty">Run a batch to see the trace. Sliders change the next batch, not the one already in flight.</div>
     </section>
   </main>
-  <footer>The worker calls <code>createResilientModel</code> from <a href="https://github.com/kfairy9999/ai-sdk-resilience">github.com/kfairy9999/ai-sdk-resilience</a>. Every provider below is an in-process fake.</footer>
+  <footer>The worker calls <code>createResilientModel</code> from <a href="https://github.com/kfairley9999/ai-sdk-resilience">github.com/kfairley9999/ai-sdk-resilience</a>. Every provider below is an in-process fake.</footer>
   <script>
     const providers = [
       { provider: 'openai', modelId: 'gpt-5.1', failure: 0.62, latency: 90 },

@@ -28,7 +28,7 @@ describe('playground worker', () => {
     expect(csp).toContain("frame-ancestors 'none'");
     expect(await contentSecurityPolicy()).toBe(csp);
     expect(response.headers.get('x-frame-options')).toBe('DENY');
-    expect(await response.text()).toContain('github.com/kfairy9999/ai-sdk-resilience');
+    expect(await response.text()).toContain('github.com/kfairley9999/ai-sdk-resilience');
     const head = await worker.fetch(new Request(`${BASE}/`, { method: 'HEAD' }));
     expect(head.status).toBe(200);
     expect(await head.text()).toBe('');

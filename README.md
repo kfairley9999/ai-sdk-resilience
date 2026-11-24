@@ -21,7 +21,7 @@ Outages are not hypothetical. [Nobody is saying why OpenAI and Anthropic had out
 This package is not on npm yet. Install it from GitHub; the `prepare` script builds `dist/` during the install:
 
 ```bash
-npm install github:kfairy9999/ai-sdk-resilience ai@^7 @ai-sdk/provider@^4
+npm install github:kfairley9999/ai-sdk-resilience ai@^7 @ai-sdk/provider@^4
 ```
 
 Peer dependencies are `ai@^7` and `@ai-sdk/provider@^4`. Keep the version ranges in the command: AI SDK 7 declares Node 22 or newer, so on Node 20 a bare `npm install ai` picks AI SDK 6, which this package does not support. Set the SDK's own `maxRetries: 0`. Otherwise the SDK wraps this middleware in a second retry loop.
