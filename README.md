@@ -1,6 +1,6 @@
 # ai-sdk-resilience
 
-[![ci](https://github.com/kfairy9999/ai-sdk-resilience/actions/workflows/ci.yml/badge.svg)](https://github.com/kfairy9999/ai-sdk-resilience/actions/workflows/ci.yml)
+[![ci](https://github.com/kfairley9999/ai-sdk-resilience/actions/workflows/ci.yml/badge.svg)](https://github.com/kfairley9999/ai-sdk-resilience/actions/workflows/ci.yml)
 
 **Live playground:** https://ai-sdk-resilience.kfairley9999.workers.dev
 
